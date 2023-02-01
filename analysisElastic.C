@@ -110,11 +110,15 @@ int analysisElastic()
 	TString output_file = (TString)(input.getCmdOption("-o")); // argv[4]);
 	TFile *outFile = new TFile(Form("outputElastic_%s.root", output_file.Data()), "recreate");
 	TTree *outT = new TTree("tree", "tree");
-	TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
+	//TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
 
 	TLorentzVector tree_Electron, tree_Proton;
 	outT->Branch("Electron", "TLorentzVector", &tree_Electron);
 	outT->Branch("Proton", "TLorentzVector", &tree_Proton);
+
+	TLorentzVector tree_Electron_Gen, tree_Proton_Gen;
+	outT->Branch("Electron_Gen", "TLorentzVector", &tree_Electron_Gen);
+	outT->Branch("Proton_Gen", "TLorentzVector", &tree_Proton_Gen);
 
 	int trigger_bit;
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
@@ -130,7 +134,15 @@ int analysisElastic()
 		"PCAL_sector_elec",
 		"PCAL_energy_elec", "ECIN_energy_elec",
 		"electron_HTCC_ECAL_match", 
-		"PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec", };
+		"PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec", 
+		
+		"evt_num",
+		"Q2_Gen",
+		"W_Gen",
+		"vz_elec_Gen",
+		"vz_prot_Gen",
+		
+		};
 
 	std::map<TString, Float_t> outVars;
 	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
@@ -139,13 +151,8 @@ int analysisElastic()
 		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
 	}
 
-	TString fvars_Gen[] = {
-		"weight",
-		"evt_num",
-		"Q2_Gen",
-		"W_Gen",
-		"vz_elec_Gen",
-		"vz_prot_Gen",
+	/*TString fvars_Gen[] = {
+		
 	};
 
 	std::map<TString, Float_t> outVars_Gen;
@@ -159,7 +166,7 @@ int analysisElastic()
 
 		outT->Branch("Electron", "TLorentzVector", &tree_Electron);
 		outT->Branch("Proton", "TLorentzVector", &tree_Proton);
-	}
+	}*/
 	///////////////////////////////////////////
 
 	int nbtc = 0;
@@ -313,13 +320,7 @@ int analysisElastic()
 
 				ev.Set_Weight(w);
 
-				outVars_Gen["weight"] = MC_ev.w;
-				outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
-				outVars_Gen["W_Gen"] = MC_ev.W_Gen;
-				outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
-				outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
-
-				outT_Gen->Fill();
+				//outT_Gen->Fill();
 			}
 
 			///////////////////////////////////////////
@@ -400,9 +401,17 @@ int analysisElastic()
 				outVars["PCAL_energy_elec"] = ev.Electron.Energy(ECAL, PCAL);
 				outVars["ECIN_energy_elec"] = ev.Electron.Energy(ECAL, ECIN);
 
+				outVars["Q2_Gen"] = MC_ev.Q2_Gen;
+				outVars["W_Gen"] = MC_ev.W_Gen;
+				outVars["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
+				outVars["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
+
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Proton = ev.Proton.Vector;
+
+				tree_Electron_Gen = MC_ev.Electron.Vector;
+				tree_Proton_Gen = MC_ev.Proton.Vector;
 
 				outT->Fill();
 			}

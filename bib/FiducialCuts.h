@@ -134,6 +134,33 @@ const float ECOUTlimits[6][2][3] = {
 		// up
 		{409.363, 410.544, 378.023}}};
 
+
+bool pass_Dead_Paddle_PCAL(int sector, float U, float V, float W)
+{
+
+	if (sector == 1)
+	{
+		return !( (W>72. && W<93.) ||  (W>210. && W<231.) );
+	}
+	else if (sector == 2)
+	{
+		return !( (V>100. && V<115.) );
+	}
+	else if (sector == 4)
+	{
+		return !( (V>228. && V<242.) ||  (V<15.) );
+	}
+	else if (sector == 6)
+	{
+		return !( (W>170. && V<194.) );
+	}
+	else
+		return true;
+
+}
+
+
+
 Particle ApplyECcuts(Particle particle, hipo::bank CALO)
 {
 
@@ -186,7 +213,7 @@ Particle ApplyECcuts(Particle particle, hipo::bank CALO)
 			Calo.m3v = Calom3v;
 			Calo.m3w = Calom3w;
 
-			if (Calolayer == 1 /*&& Calov > PCALlimits[Calosector - 1][0][1] && Calov < PCALlimits[Calosector - 1][1][1] && Calow > PCALlimits[Calosector - 1][0][2] && Calow < PCALlimits[Calosector - 1][1][2]*/)
+			if (Calolayer == 1 && pass_Dead_Paddle_PCAL(Calosector, Calou, Calov, Calow) /*&& Calov > PCALlimits[Calosector - 1][0][1] && Calov < PCALlimits[Calosector - 1][1][1] && Calow > PCALlimits[Calosector - 1][0][2] && Calow < PCALlimits[Calosector - 1][1][2]*/)
 			{
 				particle.Calorimeter.push_back(Calo);
 			}

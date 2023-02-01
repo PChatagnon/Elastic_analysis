@@ -74,11 +74,11 @@ class Particle
 public:
         int index = -1;
 
-        int pid;
-        float beta;
-        float vt;
-        int status;
-        float chi2;
+        int pid = -5000;
+        float beta = -5000.;
+        float vt = -5000.;
+        int status = 0;
+        float chi2 = -5000.;
         bool passEC = true;
         vertex vertex;
         TLorentzVector Vector;
