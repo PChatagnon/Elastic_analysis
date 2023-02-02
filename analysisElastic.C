@@ -110,7 +110,7 @@ int analysisElastic()
 	TString output_file = (TString)(input.getCmdOption("-o")); // argv[4]);
 	TFile *outFile = new TFile(Form("outputElastic_%s.root", output_file.Data()), "recreate");
 	TTree *outT = new TTree("tree", "tree");
-	//TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
+	TTree *outT_Gen = new TTree("tree_Gen", "tree_Gen");
 
 	TLorentzVector tree_Electron, tree_Proton;
 	outT->Branch("Electron", "TLorentzVector", &tree_Electron);
@@ -329,8 +329,8 @@ int analysisElastic()
 				outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
 				outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
 
-				tree_Electron_Gen = MC_ev.Electron.Vector;
-				tree_Proton_Gen = MC_ev.Proton.Vector;
+				tree_Electron_Gen = MC_ev.Electron;
+				tree_Proton_Gen = MC_ev.Proton;
 
 				outT_Gen->Fill();
 			}
@@ -422,8 +422,8 @@ int analysisElastic()
 				tree_Electron = ev.Electron.Vector;
 				tree_Proton = ev.Proton.Vector;
 
-				tree_Electron_Gen = MC_ev.Electron.Vector;
-				tree_Proton_Gen = MC_ev.Proton.Vector;
+				tree_Electron_Gen = MC_ev.Electron;
+				tree_Proton_Gen = MC_ev.Proton;
 
 				outT->Fill();
 			}
