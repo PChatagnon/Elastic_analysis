@@ -151,8 +151,12 @@ int analysisElastic()
 		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
 	}
 
-	/*TString fvars_Gen[] = {
-		
+	TString fvars_Gen[] = {
+		"evt_num",
+		"Q2_Gen",
+		"W_Gen",
+		"vz_elec_Gen",
+		"vz_prot_Gen",
 	};
 
 	std::map<TString, Float_t> outVars_Gen;
@@ -164,9 +168,9 @@ int analysisElastic()
 			ADDVAR(&(outVars_Gen[fvars_Gen[i]]), fvars_Gen[i], "/F", outT_Gen);
 		}
 
-		outT->Branch("Electron", "TLorentzVector", &tree_Electron);
-		outT->Branch("Proton", "TLorentzVector", &tree_Proton);
-	}*/
+		outT_Gen->Branch("Electron_Gen", "TLorentzVector", &tree_Electron_Gen);
+		outT_Gen->Branch("Proton_Gen", "TLorentzVector", &tree_Proton_Gen);
+	}
 	///////////////////////////////////////////
 
 	int nbtc = 0;
@@ -301,18 +305,18 @@ int analysisElastic()
 			hipo_event.getStructure(TRAJ);
 			hipo_event.getStructure(TRACK);
 
-			if (MCPART.getSize() < 1 && (!IsData))
-				continue;
-
 			// Number of total event
 			Plots.Fill_1D("evt_count", 0, 1);
+
+			if (MCPART.getSize() < 1 && (!IsData))
+				continue;
 
 			run = RUN.getInt("run", 0);
 			trigger_bit = RUN.getLong("trigger", 0);
 			int np_input = PART.getRows();
 			ev.Set_trigger_bit(trigger_bit);
 
-			if (!IsData)
+			if (IsSimu)
 			{
 
 				MC_ev.Set_MC_Particles(MCEVENT, MCPART);
@@ -320,7 +324,15 @@ int analysisElastic()
 
 				ev.Set_Weight(w);
 
-				//outT_Gen->Fill();
+				outVars_Gen["Q2_Gen"] = MC_ev.Q2_Gen;
+				outVars_Gen["W_Gen"] = MC_ev.W_Gen;
+				outVars_Gen["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
+				outVars_Gen["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
+
+				tree_Electron_Gen = MC_ev.Electron.Vector;
+				tree_Proton_Gen = MC_ev.Proton.Vector;
+
+				outT_Gen->Fill();
 			}
 
 			///////////////////////////////////////////
