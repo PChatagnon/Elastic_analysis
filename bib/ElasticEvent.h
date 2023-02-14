@@ -113,6 +113,12 @@ public:
                 Proton = ApplyECcuts(Proton, CALO);
         }
 
+        void Associate_DC_traj(hipo::bank TRAJ)
+        {
+                Electron.Associate_DC_traj_to_Particle(TRAJ);
+                //Proton.Associate_DC_traj_to_Particle(TRAJ);  
+        }
+
         bool pass_EC_cut()
         {
                 return (Electron.passEC && Proton.passEC);

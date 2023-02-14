@@ -12,9 +12,9 @@
 #include "TCanvas.h"
 #include "TH3F.h"
 #include "bib/Particleclass.h"
-//#include "bib/TCSfunc.h"
+// #include "bib/TCSfunc.h"
 #include "bib/ElasticPlotClass.h"
-//#include "bib/TCSMomentumCorrection.h"
+// #include "bib/TCSMomentumCorrection.h"
 #include "bib/LeptonIDClass.h"
 #include "bib/FiducialCuts.h"
 #include "bib/ElasticEvent.h"
@@ -46,22 +46,21 @@ int analysisElastic()
 	gStyle->SetMarkerStyle(13);
 	gStyle->SetOptFit(1);
 
-
 	Int_t argc = gApplication->Argc();
 	char **argv = gApplication->Argv();
 	Input input(argc, argv);
 
 	bool IsData = true;
 	bool IsHipo = true;
-
 	bool IsSimu = false;
-	IsSimu = input.cmdOptionExists("-IsSimu");
-
 	bool RGA_Fall2018 = false; // inbending or outbending in the end
-	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
-
 	bool inbending = true;
+	bool DC_Traj_check = false;
+
+	IsSimu = input.cmdOptionExists("-IsSimu");
+	RGA_Fall2018 = input.cmdOptionExists("-RGA_Fall2018");
 	inbending = !input.cmdOptionExists("-outbending");
+	DC_Traj_check = input.cmdOptionExists("-DC_Traj_check");
 
 	if (input.cmdOptionExists("-usage"))
 	{
@@ -103,7 +102,7 @@ int analysisElastic()
 	//////////////////////////////////////////////
 	// Momentum Correction
 	//////////////////////////////////////////////
-	//MomentumCorrection MomCorr;
+	// MomentumCorrection MomCorr;
 
 	///////////////////////////////////////////
 	// Setup the TTree output
@@ -123,29 +122,58 @@ int analysisElastic()
 	int trigger_bit;
 	outT->Branch("trigger_bit", &trigger_bit, "trigger_bit/I");
 
-	TString fvars[] = {
-		"evt_num", "Q2", "W", "weight", "run",
-		"electron_Nphe", "electron_SF", "electron_score",
-		"status_elec", "status_prot",
+	std::vector<TString> fvars = {
+		"evt_num",
+		"Q2",
+		"W",
+		"weight",
+		"run",
+		"electron_Nphe",
+		"electron_SF",
+		"electron_score",
+		"status_elec",
+		"status_prot",
 		"chi2_proton",
-		"vx_elec", "vy_elec", "vz_elec",
-		"vx_prot", "vy_prot", "vz_prot",
-		"PCAL_x_elec", "PCAL_y_elec",
+		"vx_elec",
+		"vy_elec",
+		"vz_elec",
+		"vx_prot",
+		"vy_prot",
+		"vz_prot",
+		"PCAL_x_elec",
+		"PCAL_y_elec",
 		"PCAL_sector_elec",
-		"PCAL_energy_elec", "ECIN_energy_elec",
-		"electron_HTCC_ECAL_match", 
-		"PCAL_U_elec", "PCAL_V_elec", "PCAL_W_elec", 
-		
+		"PCAL_energy_elec",
+		"ECIN_energy_elec",
+		"electron_HTCC_ECAL_match",
+		"PCAL_U_elec",
+		"PCAL_V_elec",
+		"PCAL_W_elec",
+
 		"evt_num",
 		"Q2_Gen",
 		"W_Gen",
 		"vz_elec_Gen",
 		"vz_prot_Gen",
-		
-		};
+
+	};
+
+	if (DC_Traj_check)
+	{
+		fvars.insert(fvars.end(), {"DC_R1_elec_x", "DC_R1_elec_y", "DC_R1_elec_z",
+								   "DC_R2_elec_x", "DC_R2_elec_y", "DC_R2_elec_z",
+								   "DC_R3_elec_x", "DC_R3_elec_y", "DC_R3_elec_z"});
+	}
+
+	/*std::map<TString, Float_t> outVars;
+	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
+	{
+		outVars[fvars[i]] = 0.;
+		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
+	}*/
 
 	std::map<TString, Float_t> outVars;
-	for (size_t i = 0; i < sizeof(fvars) / sizeof(TString); i++)
+	for (size_t i = 0; i < fvars.size(); i++)
 	{
 		outVars[fvars[i]] = 0.;
 		ADDVAR(&(outVars[fvars[i]]), fvars[i], "/F", outT);
@@ -193,7 +221,6 @@ int analysisElastic()
 		electron_bdt_weights = "ML_weights/TMVAClassification_BDT_neg_outbending.weights.xml";
 	}
 
-	
 	LeptonIdentification ElectronPID("BDT", electron_bdt_weights, 0.0, 4.0);
 	ElectronPID.InitializeBDT_new_PositronIdentification();
 
@@ -204,8 +231,6 @@ int analysisElastic()
 	Plots.Initialize_1D();
 	Plots.Initialize_2D();
 	Plots.SetOutputFolder("Plots");
-
-	
 
 	int corrrad = 0;
 	int nbEvent = 0;
@@ -286,7 +311,7 @@ int analysisElastic()
 			}
 
 			double w = 1;
-			
+
 			Event ev;
 			MCEvent MC_ev;
 
@@ -305,11 +330,10 @@ int analysisElastic()
 			hipo_event.getStructure(TRAJ);
 			hipo_event.getStructure(TRACK);
 
-			// Number of total event
-			Plots.Fill_1D("evt_count", 0, 1);
-
 			if (MCPART.getSize() < 1 && (!IsData))
 				continue;
+
+			Plots.Fill_1D("evt_count", 0, 1);
 
 			run = RUN.getInt("run", 0);
 			trigger_bit = RUN.getLong("trigger", 0);
@@ -355,8 +379,9 @@ int analysisElastic()
 			///////////////////////////////////////////
 			// Associate detector responses and do EC cuts
 			///////////////////////////////////////////
-			ev.Apply_EC_Cuts(CALO); //Just assign CALO response, no cuts
+			ev.Apply_EC_Cuts(CALO); // Just assign CALO response, no cuts
 			ev.Associate_detector_resp(CHE, SCIN);
+			ev.Associate_DC_traj(TRAJ);
 			ev.Set_Nphe_HTCC();
 			///////////////////////////////////////////
 
@@ -370,14 +395,14 @@ int analysisElastic()
 			///////////////////////////////////////////
 			// Radiative correction
 			///////////////////////////////////////////
-			//ev.Apply_Radiative_Correction(InputParameters.RadCorr);
+			// ev.Apply_Radiative_Correction(InputParameters.RadCorr);
 			ev.Compute_SF();
 			///////////////////////////////////////////
 
 			///////////////////////////////////////////
 			// Momentum MC correction
 			///////////////////////////////////////////
-			//ev.Apply_MC_Correction(MomCorr);
+			// ev.Apply_MC_Correction(MomCorr);
 			///////////////////////////////////////////
 
 			ev.Set_Run_Number(run);
@@ -418,6 +443,20 @@ int analysisElastic()
 				outVars["vz_elec_Gen"] = MC_ev.vz_elec_Gen;
 				outVars["vz_prot_Gen"] = MC_ev.vz_prot_Gen;
 
+				if (DC_Traj_check)
+				{
+					outVars["DC_R1_elec_x"] = ev.Electron.Trajs[0].x;
+					outVars["DC_R1_elec_y"] = ev.Electron.Trajs[0].y;
+					outVars["DC_R1_elec_z"] = ev.Electron.Trajs[0].z;
+
+					outVars["DC_R2_elec_x"] = ev.Electron.Trajs[1].x;
+					outVars["DC_R2_elec_y"] = ev.Electron.Trajs[1].y;
+					outVars["DC_R2_elec_z"] = ev.Electron.Trajs[1].z;
+
+					outVars["DC_R3_elec_x"] = ev.Electron.Trajs[2].x;
+					outVars["DC_R3_elec_y"] = ev.Electron.Trajs[2].y;
+					outVars["DC_R3_elec_z"] = ev.Electron.Trajs[2].z;
+				}
 
 				tree_Electron = ev.Electron.Vector;
 				tree_Proton = ev.Proton.Vector;
@@ -430,15 +469,15 @@ int analysisElastic()
 		}
 	}
 
-
-	outT->Write();
+	// outT->SetAutoSave(0);
+	// outT->Write();
 	outFile->Write();
 	outFile->Close();
 
 	cout << "nb of file " << nbf << "\n";
 	cout << "nb of events " << nbEvent << "\n";
-	
-	time(&end); 
+
+	time(&end);
 	double difference = difftime(end, begin);
 	printf("All this work done in only %.2lf seconds. Congratulations !\n", difference);
 
