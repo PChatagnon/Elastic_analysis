@@ -43,6 +43,7 @@ public:
         float x = -10000.;
         float y = -10000.;
         float z = -10000.;
+        float edge = -10000.;
 };
 
 class CalorimeterResp
@@ -286,6 +287,7 @@ public:
                         float TRAJ_X = TRAJ.getFloat("x", t);
                         float TRAJ_Y = TRAJ.getFloat("y", t);
                         float TRAJ_Z = TRAJ.getFloat("z", t);
+                        float TRAJ_edge = TRAJ.getFloat("edge", t);
 
                         if (TRAJ_pindex == index && TRAJ_detector == DC)
                         { 
@@ -294,7 +296,8 @@ public:
                                 new_Traj.layer = TRAJ_layer;
                                 new_Traj.x = TRAJ_X;
                                 new_Traj.y = TRAJ_Y;
-                                new_Traj.z = TRAJ_Z;  
+                                new_Traj.z = TRAJ_Z; 
+                                new_Traj.edge = TRAJ_edge; 
                                 Trajs.push_back(new_Traj);
                         }
                 }     

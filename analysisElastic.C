@@ -162,7 +162,8 @@ int analysisElastic()
 	{
 		fvars.insert(fvars.end(), {"DC_R1_elec_x", "DC_R1_elec_y", "DC_R1_elec_z",
 								   "DC_R2_elec_x", "DC_R2_elec_y", "DC_R2_elec_z",
-								   "DC_R3_elec_x", "DC_R3_elec_y", "DC_R3_elec_z"});
+								   "DC_R3_elec_x", "DC_R3_elec_y", "DC_R3_elec_z",
+								   "DC_R1_elec_edge", "DC_R2_elec_edge", "DC_R3_elec_edge",});
 	}
 
 	/*std::map<TString, Float_t> outVars;
@@ -456,6 +457,10 @@ int analysisElastic()
 					outVars["DC_R3_elec_x"] = ev.Electron.Trajs[2].x;
 					outVars["DC_R3_elec_y"] = ev.Electron.Trajs[2].y;
 					outVars["DC_R3_elec_z"] = ev.Electron.Trajs[2].z;
+
+					outVars["DC_R1_elec_edge"] = ev.Electron.Trajs[0].edge;
+					outVars["DC_R2_elec_edge"] = ev.Electron.Trajs[1].edge;
+					outVars["DC_R3_elec_edge"] = ev.Electron.Trajs[2].edge;
 				}
 
 				tree_Electron = ev.Electron.Vector;
