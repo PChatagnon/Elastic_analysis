@@ -62,6 +62,11 @@ int analysisElastic()
 	inbending = !input.cmdOptionExists("-outbending");
 	DC_Traj_check = input.cmdOptionExists("-DC_Traj_check");
 
+	if (input.cmdOptionExists("-energy"))
+	{
+		ebeam = std::stof(input.getCmdOption("-energy"));
+	}
+
 	if (input.cmdOptionExists("-usage"))
 	{
 		cout << "Use as : clas12root -l analysisElastic.C -o ouputname -f files -ef -inbending\n";
