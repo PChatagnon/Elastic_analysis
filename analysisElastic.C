@@ -79,6 +79,7 @@ int analysisElastic()
 	cout << "Inbending : " << inbending << "\n";
 	cout << "RGA_Fall2018 : " << RGA_Fall2018 << "\n";
 	cout << "IsSimu : " << IsSimu << "\n";
+	cout << "Energy beam : " << ebeam << "\n";
 	cout << "////////////////////////////////////////////"
 		 << "\n";
 
