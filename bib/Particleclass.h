@@ -3,7 +3,7 @@
 
 const float me = 0.000511;
 const float mp = 0.938;
-const float ebeam = 10.604;
+float ebeam = 10.604;
 
 const float Pi = 3.14159269;
 

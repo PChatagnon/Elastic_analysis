@@ -213,7 +213,7 @@ Particle ApplyECcuts(Particle particle, hipo::bank CALO)
 			Calo.m3v = Calom3v;
 			Calo.m3w = Calom3w;
 
-			if (Calolayer == 1 && pass_Dead_Paddle_PCAL(Calosector, Calou, Calov, Calow) /*&& Calov > PCALlimits[Calosector - 1][0][1] && Calov < PCALlimits[Calosector - 1][1][1] && Calow > PCALlimits[Calosector - 1][0][2] && Calow < PCALlimits[Calosector - 1][1][2]*/)
+			if (Calolayer == 1 /*&& pass_Dead_Paddle_PCAL(Calosector, Calou, Calov, Calow)*/ /*&& Calov > PCALlimits[Calosector - 1][0][1] && Calov < PCALlimits[Calosector - 1][1][1] && Calow > PCALlimits[Calosector - 1][0][2] && Calow < PCALlimits[Calosector - 1][1][2]*/)
 			{
 				particle.Calorimeter.push_back(Calo);
 			}

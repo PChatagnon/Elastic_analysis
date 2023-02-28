@@ -69,7 +69,7 @@ public:
 
                         if (pid == 11)
                         {
-                                if (status > 2000)
+                                if (status > 2000 && recem==0)
                                 {
                                         Electron.Vector.SetXYZM(px, py, pz, me);
                                         Electron.index = i;
@@ -104,7 +104,7 @@ public:
 
         bool pass_topology_cut()
         {
-                return (recem == 1);
+                return (recem > 0);
         }
 
         void Apply_EC_Cuts(hipo::bank CALO)
