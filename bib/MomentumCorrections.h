@@ -1,7 +1,7 @@
-#ifndef MomemtumCorrections
-#define MomemtumCorrections
+#ifndef MomentumCorrections
+#define MomentumCorrections
 
-auto dppC = [&](float Px, float Py, float Pz, int sec, int ivec)
+double dppC(float Px, float Py, float Pz, int sec, int ivec)
 {
 	// ivec = 0 --> Electron Corrections
 	// ivec = 1 --> π+ Corrections
