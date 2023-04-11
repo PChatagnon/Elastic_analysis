@@ -203,6 +203,15 @@ public:
 
                 Electron = Particles[0];
                 Proton = Particles[1];
+
+                //Apply momentum corrections to electron
+                double ex = Electron.Vector.Px();
+                double ey = Electron.Vector.Py();
+                double ey = Electron.Vector.Pz();
+                int esec = Electron.SECTOR_CALO(PCAL);
+                double fe = dppC(ex, ey, ez, esec, 0) + 1;
+                TLorentzVector eleC = ROOT::Math::PxPyPzMVector(ex*fe, ey*fe, ez*fe, 0);
+                Electron.Vector = eleC;
         }
 
         /*void Apply_MC_Correction(MomentumCorrection MomCorr)
