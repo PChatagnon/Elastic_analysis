@@ -21,6 +21,7 @@
 #include "bib/ElasticMCEvent.h"
 #include "bib/RunSelectorClass.h"
 #include "bib/InputParser.h"
+#include "bib/MomentumCorrections.h"
 
 #include "reader.h"
 

@@ -210,7 +210,7 @@ public:
                 double ez = Electron.Vector.Pz();
                 int esec = Electron.SECTOR_CALO(PCAL);
                 double fe = dppC(ex, ey, ez, esec, 0) + 1;
-                Electron.Vector..SetXYZM(ex*fe, ey*fe, ez*fe, me);
+                Electron.Vector.SetXYZM(ex*fe, ey*fe, ez*fe, me);
         }
 
         /*void Apply_MC_Correction(MomentumCorrection MomCorr)
