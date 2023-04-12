@@ -209,7 +209,7 @@ public:
                 double ey = Electron.Vector.Py();
                 double ez = Electron.Vector.Pz();
                 int esec = Electron.SECTOR_CALO(PCAL);
-                double fe = dppC(ex, ey, ez, esec, 0) + 1;
+                double fe = MomemtumCorrection_CLAS12(ex, ey, ez, esec, 0) + 1.;
                 Electron.Vector.SetXYZM(ex*fe, ey*fe, ez*fe, me);
         }
 

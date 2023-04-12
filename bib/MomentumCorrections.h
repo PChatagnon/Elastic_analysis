@@ -1,7 +1,9 @@
-#ifndef MomentumCorrections
-#define MomentumCorrections
+#ifndef ElasticMomentumCorrections
+#define ElasticMomentumCorrections
 
-double dppC(float Px, float Py, float Pz, int sec, int ivec)
+
+
+double MomemtumCorrection_CLAS12(float Px, float Py, float Pz, int sec, int ivec)
 {
 	// ivec = 0 --> Electron Corrections
 	// ivec = 1 --> π+ Corrections
@@ -98,7 +100,7 @@ double dppC(float Px, float Py, float Pz, int sec, int ivec)
 	//=========================//=========================//     π+ Corrections     //=========================//=========================//
 	//====================================================================================================================================//
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (vec == 1)
+	if (ivec == 1)
 	{
 		if (sec == 1)
 		{
@@ -228,6 +230,6 @@ double dppC(float Px, float Py, float Pz, int sec, int ivec)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	return dp / pp;
-};
+}
 
 #endif
