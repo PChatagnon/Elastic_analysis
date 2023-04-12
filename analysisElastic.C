@@ -395,6 +395,7 @@ int analysisElastic()
 			ev.Set_Nphe_HTCC();
 			if (DC_Traj_check)
 				ev.Associate_DC_traj(TRAJ);
+			ev.Apply_Mom_Correction(inbending)
 			///////////////////////////////////////////
 
 			///////////////////////////////////////////

@@ -204,19 +204,24 @@ public:
                 Electron = Particles[0];
                 Proton = Particles[1];
 
+        }
+
+        void Apply_Mom_Correction(bool inbending)
+        {
                 //Apply momentum corrections to electron
                 double ex = Electron.Vector.Px();
                 double ey = Electron.Vector.Py();
                 double ez = Electron.Vector.Pz();
                 int esec = Electron.SECTOR_CALO(PCAL);
-                double fe = MomemtumCorrection_CLAS12(ex, ey, ez, esec, 0) + 1.;
+                double fe = 0.0;
+                
+                if(inbending)
+                        fe = MomemtumCorrection_CLAS12_inbending(ex, ey, ez, esec, 0) + 1.;
+                else
+                        fe = MomemtumCorrection_CLAS12_outbending(ex, ey, ez, esec, 0) + 1.;
+
                 Electron.Vector.SetXYZM(ex*fe, ey*fe, ez*fe, me);
         }
-
-        /*void Apply_MC_Correction(MomentumCorrection MomCorr)
-        {
-                Proton = MomCorr.Apply_MC_Correction(Proton);
-        }*/
 
         void Get_Kinematics()
         {
