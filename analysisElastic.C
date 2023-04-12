@@ -336,8 +336,10 @@ int analysisElastic()
 			hipo_event.getStructure(CHE);
 			hipo_event.getStructure(CALO);
 			hipo_event.getStructure(EVENT);
-			hipo_event.getStructure(TRAJ);
 			hipo_event.getStructure(TRACK);
+			if (DC_Traj_check)
+				hipo_event.getStructure(TRAJ);
+			
 
 			if (MCPART.getSize() < 1 && (!IsData))
 				continue;
@@ -390,8 +392,9 @@ int analysisElastic()
 			///////////////////////////////////////////
 			ev.Apply_EC_Cuts(CALO); // Just assign CALO response, no cuts
 			ev.Associate_detector_resp(CHE, SCIN);
-			ev.Associate_DC_traj(TRAJ);
 			ev.Set_Nphe_HTCC();
+			if (DC_Traj_check)
+				ev.Associate_DC_traj(TRAJ);
 			///////////////////////////////////////////
 
 			///////////////////////////////////////////
