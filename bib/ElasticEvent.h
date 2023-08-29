@@ -223,6 +223,22 @@ public:
                 Electron.Vector.SetXYZM(ex*fe, ey*fe, ez*fe, me);
         }
 
+
+         void Apply_Mom_Smearing(MCEvent MC_ev, double smearing_factor)
+        {
+                //Apply momentum corrections to electron
+                double px_rec = Electron.Vector.Px();
+                double py_rec = Electron.Vector.Py();
+                double pz_rec = Electron.Vector.Pz();
+                
+                double px_mc = MC_ev.Electron.Vector.Px();
+                double py_mc = MC_ev.Electron.Vector.Py();
+                double pz_mc = MC_ev.Electron.Vector.Pz();
+
+                Electron.Vector.SetXYZM(px_rec+smearing_factor*(px_rec-px_mc), py_rec+smearing_factor*(py_rec-py_mc), pz_rec+smearing_factor*(pz_rec-pz_mc), me);
+        }
+
+
         void Get_Kinematics()
         {
                 W = (vBeam + vRestProton - Electron.Vector).M();
