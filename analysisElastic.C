@@ -69,6 +69,12 @@ int analysisElastic()
 		ebeam = std::stof(input.getCmdOption("-energy"));
 	}
 
+	double smear_factor = 0.0;
+	if (input.cmdOptionExists("-smear"))
+	{
+		smear_factor = std::stof(input.getCmdOption("-smear"));
+	}
+
 	if (input.cmdOptionExists("-usage"))
 	{
 		cout << "Use as : clas12root -l analysisElastic.C -o ouputname -f files -ef -inbending\n";
@@ -390,7 +396,8 @@ int analysisElastic()
 			///////////////////////////////////////////
 			//If simulation, apply smearing
 			///////////////////////////////////////////
-			ev.Apply_Mom_Smearing(MC_ev, 0.8);
+			if (IsSimu)
+				ev.Apply_Mom_Smearing(MC_ev, smear_factor);
 			///////////////////////////////////////////
 
 			///////////////////////////////////////////
