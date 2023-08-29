@@ -231,9 +231,9 @@ public:
                 double py_rec = Electron.Vector.Py();
                 double pz_rec = Electron.Vector.Pz();
                 
-                double px_mc = MC_ev.Electron.Vector.Px();
-                double py_mc = MC_ev.Electron.Vector.Py();
-                double pz_mc = MC_ev.Electron.Vector.Pz();
+                double px_mc = MC_ev.Electron.Px();
+                double py_mc = MC_ev.Electron.Py();
+                double pz_mc = MC_ev.Electron.Pz();
 
                 Electron.Vector.SetXYZM(px_rec+smearing_factor*(px_rec-px_mc), py_rec+smearing_factor*(py_rec-py_mc), pz_rec+smearing_factor*(pz_rec-pz_mc), me);
         }
